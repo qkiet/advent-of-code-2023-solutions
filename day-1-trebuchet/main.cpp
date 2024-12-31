@@ -37,7 +37,7 @@ int main(int argc, char* argv[]) {
         cout << "Expect only one argument, which is filename!" << endl;
         return -1;
     }
-    ifstream input_file("input.txt");
+    ifstream input_file(argv[1]);
     string str;
     unsigned long int result = 0;
     while (getline(input_file, str)) {
