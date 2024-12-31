@@ -3,8 +3,41 @@
 #include <tuple>
 #include <fstream>
 #include <cstdio>
+#include <map>
 
 using namespace std;
+
+map<string, unsigned int> text_to_number = {
+    {"one", 1},
+    {"two", 2},
+    {"three", 3},
+    {"four", 4},
+    {"five", 5},
+    {"six", 6},
+    {"seven", 7},
+    {"eight", 8},
+    {"nine", 9},
+};
+
+// Return 0 if success, -1 otherwise
+int try_convert_to_number(const string& str, unsigned int pos, unsigned int& number) {
+    unsigned int possible_substring_len = str.length() - pos;
+    if (possible_substring_len < 3)
+        return -1;
+    //  Why 5? 5 is the max length of all text number, which are "three" and "eight"
+    for (auto it = text_to_number.begin(); it != text_to_number.end(); it++) {
+        string num_text = it->first;
+        if (possible_substring_len < num_text.length()) {
+            continue;
+        }
+        string substr_to_check = str.substr(pos, num_text.length());
+        if (substr_to_check.compare(num_text) == 0) {
+            number = it->second;
+            return 0;
+        }
+    }
+    return -1;
+}
 
 tuple<unsigned int, unsigned int> get_first_last_numbers_from_string(const string& str) {
     unsigned int first_digit, last_digit;
@@ -13,6 +46,10 @@ tuple<unsigned int, unsigned int> get_first_last_numbers_from_string(const strin
         if (('0' <= c) && (c <= '9')) {
             // Fast conversion using ASCII. I hate using library just for this :-)
             first_digit = c - 48;
+            break;
+        }
+        // Then check text to number
+        if (try_convert_to_number(str, distance(str.begin(), it), first_digit) != -1) {
             break;
         }
     }
@@ -25,6 +62,10 @@ tuple<unsigned int, unsigned int> get_first_last_numbers_from_string(const strin
         if (('0' <= c) && (c <= '9')) {
             // Fast conversion using ASCII. I hate using library just for this :-)
             last_digit = c - 48;
+            break;
+        }
+        // Then check text to number. For reverse iterator, I have to do some clever like this
+        if (try_convert_to_number(str, str.length() - distance(str.rbegin(), it) - 1, last_digit) != -1) {
             break;
         }
     }
