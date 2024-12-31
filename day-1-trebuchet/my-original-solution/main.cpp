@@ -24,7 +24,6 @@ int try_convert_to_number(const string& str, unsigned int pos, unsigned int& num
     unsigned int possible_substring_len = str.length() - pos;
     if (possible_substring_len < 3)
         return -1;
-    //  Why 5? 5 is the max length of all text number, which are "three" and "eight"
     for (auto it = text_to_number.begin(); it != text_to_number.end(); it++) {
         string num_text = it->first;
         if (possible_substring_len < num_text.length()) {
