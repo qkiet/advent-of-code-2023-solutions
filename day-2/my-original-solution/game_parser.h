@@ -1,4 +1,5 @@
 #include <string>
+#include <tuple>
 
 class GameParserPartOne {
 public:
@@ -11,4 +12,14 @@ private:
     // I have to use...unsigned long int (which is too bing)
     int mGameId;
     bool mIsValid;
+};
+
+class GameParserPartTwo {
+public:
+    GameParserPartTwo(const std::string &game_text);
+    std::tuple<int, int, int> GetPossibleNumberOfCubes();
+private:
+    int mPossibleNumberOfRedCubes;
+    int mPossibleNumberOfGreenCubes;
+    int mPossibleNumberOfBlueCubes;
 };

@@ -63,3 +63,45 @@ int GameParserPartOne::GetId() {
 bool GameParserPartOne::IsGameValid() {
     return mIsValid;
 }
+
+
+// Parse the game text immediately
+// Example: 
+// - Game 1: 3 blue, 4 red; 1 red, 2 green, 6 blue; 2 green
+// - Game 2: 1 blue, 2 green; 3 green, 4 blue, 1 red; 1 green, 1 blue
+GameParserPartTwo::GameParserPartTwo(const std::string &game_text) {
+    const size_t colon_pos = game_text.find(':');
+    const std::string game_result_substr = game_text.substr(colon_pos);
+    boost::tokenizer<> set_result_token(game_result_substr);
+    mPossibleNumberOfRedCubes = 0;
+    mPossibleNumberOfGreenCubes = 0;
+    mPossibleNumberOfBlueCubes = 0;
+
+    for(boost::tokenizer<>::iterator it=set_result_token.begin(); it!=set_result_token.end(); ++it) {
+        int cube_number;
+        // Because a token is either a number or a string (one of "red", "blue", "green")
+        // with number token always come first, we can do a trick like these
+        if (is_string_a_number(*it)) {
+            cube_number = std::stoi(*it);
+        } else {
+            if (std::string(*it).find("red") == 0) {
+                if (cube_number > mPossibleNumberOfRedCubes) {
+                    mPossibleNumberOfRedCubes = cube_number;
+                }
+            } else if (std::string(*it).find("blue") == 0) {
+                if (cube_number > mPossibleNumberOfBlueCubes) {
+                    mPossibleNumberOfBlueCubes = cube_number;
+                }
+            } else if (std::string(*it).find("green") == 0) {
+                if (cube_number > mPossibleNumberOfGreenCubes) {
+                    mPossibleNumberOfGreenCubes = cube_number;
+                }
+            }
+        }
+    }
+}
+
+std::tuple<int, int, int> GameParserPartTwo::GetPossibleNumberOfCubes() {
+    return {mPossibleNumberOfRedCubes, mPossibleNumberOfGreenCubes, mPossibleNumberOfBlueCubes};
+}
+
